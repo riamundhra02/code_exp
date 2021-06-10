@@ -6,7 +6,7 @@ import { globalStyles } from './shared/globalStyles'
 export default function Home(){
     return(
         <View style={globalStyles.container}>
-            <Text>Some changes jsahdjskahdjak</Text>
+            <Text>Some changes jsahdjskahdjak more changes</Text>
         </View>
     )
 }
