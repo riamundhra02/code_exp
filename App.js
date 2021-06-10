@@ -1,21 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react'
+import TabNavigator from './src/TabsNavigator'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+const getFonts = () => Font.loadAsync({
+    'quicksand-regular': require('./assets/fonts/Quicksand-Regular.ttf'),
+    'quicksand-bold': require('./assets/fonts/Quicksand-Bold.ttf'),
+    'roboto-medium': require('./assets/fonts/Roboto-Medium.ttf'),
+    'quicksand-semibold': require('./assets/fonts/Quicksand-SemiBold.ttf'),
+    'quicksand-light': require('./assets/fonts/Quicksand-Light.ttf'),
+    'quicksand-medium': require('./assets/fonts/Quicksand-Medium.ttf'),
+})
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [fontsLoaded, setFontsLoaded] = useState(false)
+
+    if (fontsLoaded) {
+        return (
+            <SafeAreaProvider>
+                <TabNavigator />
+            </SafeAreaProvider>
+        )
+    } else {
+        return (
+            <AppLoading
+                startAsync={getFonts}
+                onFinish={() => setFontsLoaded(true)}
+                onError={console.warn}
+            />
+        )
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
