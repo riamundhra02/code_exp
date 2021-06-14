@@ -15,6 +15,8 @@ var firebaseConfig = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+}else{
+    firebase.app()
 }
 
 export const db = firebase.firestore(); //exports an instance of the firestore API object
