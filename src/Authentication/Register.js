@@ -22,13 +22,27 @@ export default function RegistrationScreen({ navigation }) {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password) //creates entry into database
+            .then((response) => {
+                const uid = response.user.uid  //userid
+                const data = {
+                    fullName: fullName,
+                    email: email,
+                    hawkerPosts: [],
+                    recipePosts: []
+
+                }
+                const usersRef = firebase.firestore().collection('userData')  // from db collection of userinfo
+                usersRef
+                    .doc(uid)
+                    .set(data)
+            })
             .catch((error) => {
                 alert(error)
             });
     }
 
     return (
-        <View style={{ flex: 1, justifyContent:"center", height:"100%" }}>
+        <View style={{ flex: 1, justifyContent: "center", height: "100%" }}>
             <TextInput
                 style={globalStyles.input}
                 placeholder='Full Name'

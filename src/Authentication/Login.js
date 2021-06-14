@@ -18,6 +18,22 @@ export default function LoginScreen({ navigation }) {
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid  // stores id of user
+                const usersRef = firebase.firestore().collection('userData')   // collection containing userdata
+                usersRef
+                    .doc(uid)
+                    .get()
+                    .then(firestoreDocument => {
+                        if (!firestoreDocument.exists) {   // if user is not in collection
+                            alert("User does not exist.")
+                            return;
+                        }
+                    })
+                    .catch(error => {  // error catching, ie. wrong password etc
+                        alert(error)
+                    });
+            })
             .catch(error => {
                 alert(error)
             })
@@ -26,43 +42,43 @@ export default function LoginScreen({ navigation }) {
 
     return (
 
-        <View style={{ flex: 1, justifyContent:"center", height:"100%" }}>
-                <TextInput
-                    style={globalStyles.input}
-                    placeholder='E-mail'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
+        <View style={{ flex: 1, justifyContent: "center", height: "100%" }}>
+            <TextInput
+                style={globalStyles.input}
+                placeholder='E-mail'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
 
-                <TextInput
-                    style={globalStyles.input}
-                    placeholderTextColor="#aaaaaa"
-                    secureTextEntry
-                    placeholder='Password'
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
+            <TextInput
+                style={globalStyles.input}
+                placeholderTextColor="#aaaaaa"
+                secureTextEntry
+                placeholder='Password'
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
 
-                <TouchableOpacity
-                    style={globalStyles.button}
-                    onPress={() => onLoginPress()}>
-                    <Text style={globalStyles.secondaryTitleText}>Log In</Text>
+            <TouchableOpacity
+                style={globalStyles.button}
+                onPress={() => onLoginPress()}>
+                <Text style={globalStyles.secondaryTitleText}>Log In</Text>
+            </TouchableOpacity>
+
+            <View style={globalStyles.footerView}>
+                <TouchableOpacity>
+                    <Text style={{ ...globalStyles.footerText, fontSize: 14 }}>Forgot password?</Text>
                 </TouchableOpacity>
+            </View>
 
-                <View style={globalStyles.footerView}>
-                    <TouchableOpacity>
-                        <Text style={{ ...globalStyles.footerText, fontSize: 14 }}>Forgot password?</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={globalStyles.footerView}>
-                    <Text style={globalStyles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={globalStyles.footerLink}>Sign up</Text></Text>
-                </View>
+            <View style={globalStyles.footerView}>
+                <Text style={globalStyles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={globalStyles.footerLink}>Sign up</Text></Text>
+            </View>
         </View>
 
     )
