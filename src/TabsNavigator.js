@@ -7,7 +7,7 @@ import { NavigationContainer, DefaultTheme, configurefonts } from '@react-naviga
 import { Ionicons } from '@expo/vector-icons';
 
 import CreatePost from './CreatePost/Main'
-import Feed from './Feed/Feed'
+import Feed from './Feed/Main'
 import Profile from './Profile/Main'
 
 import { tabsNavigatorStyle, colorTheme } from './shared/globalStyles'
