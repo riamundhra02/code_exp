@@ -8,7 +8,7 @@ export const colorTheme = { //populate this with common colour themes we are usi
     backgroundBlueThree: '#abdbe3',
     backgroundBlueFour: "#648cd4",
     TextBlue: '#4c74cc',
-    TextBlack:"black"
+    TextBlack: "black"
 
 }
 
@@ -26,6 +26,7 @@ export const tabsNavigatorStyle = {
 
 
 export const globalStyles = StyleSheet.create({
+    
     container: {
         flex: 1,
         backgroundColor: colorTheme.backgroundWhite,
@@ -53,7 +54,44 @@ export const globalStyles = StyleSheet.create({
         left: 0,
         fontSize: 18,
         fontFamily: 'quicksand-bold',
-    }
+    },
+    input: {
+        height: 60,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: '#f2f2f2',
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 30,
+        marginRight: 30,
+        paddingLeft: 16,
+        fontFamily: 'quicksand-regular',
+    },
+    button: {
+        backgroundColor: colorTheme.backgroundBlueTwo,
+        marginLeft: 30,
+        marginRight: 30,
+        marginTop: 20,
+        height: 60,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: 'center',
+        fontFamily: 'quicksand-regular',
+    },
+    footerView: {
+        alignItems: "center",
+        marginTop: 20
+    },
+    footerText: {
+        fontSize: 16,
+        color: '#2e2e2d',
+        fontFamily: 'quicksand-regular',
+    },
+    footerLink: {
+        color: "#134F5C",
+        fontSize: 16,
+        fontFamily: 'quicksand-bold',
+    },
 })
 
 

@@ -9,8 +9,13 @@ import { Ionicons } from '@expo/vector-icons';
 import CreatePost from './CreatePost/Main'
 import Feed from './Feed/Main'
 import Profile from './Profile/Main'
+import Login from './Authentication/Login'
+import Register from './Authentication/Register'
 
 import { tabsNavigatorStyle, colorTheme } from './shared/globalStyles'
+import Main from './CreatePost/Main';
+
+import { firebase } from "./shared/config"
 
 const TabsNavigator = createMaterialBottomTabNavigator();
 
@@ -22,7 +27,7 @@ const MyTheme = {
     },
 }
 
-export default function TabNavigator() {
+function MainTabs() {
     return (
         <NavigationContainer theme={MyTheme}>
             <TabsNavigator.Navigator
@@ -70,6 +75,70 @@ export default function TabNavigator() {
 
             </TabsNavigator.Navigator>
         </NavigationContainer>
+    )
+}
+
+function AuthTabs() {
+    return (
+        <NavigationContainer theme={MyTheme}>
+            <TabsNavigator.Navigator
+                backBehavior='none'
+                inactiveColor='#4c74cc'
+                activeColor='#154c79'
+                shifting={true}
+            >
+
+                <TabsNavigator.Screen
+                    name="Login"
+                    component={Login}
+                    options={{
+                        tabBarLabel: 'Login',
+                        tabBarColor: tabsNavigatorStyle.color.feed,
+                        tabBarIcon: ({ color }) => (
+                            <Ionicons name="ios-person-outline" color={color} size={26} />
+                        ),
+                    }}
+                />
+
+                <TabsNavigator.Screen
+                    name="Register"
+                    component={Register}
+                    options={{
+                        tabBarLabel: 'Register',
+                        tabBarColor: tabsNavigatorStyle.color.createPost,
+                        tabBarIcon: ({ color }) => (
+                            <Ionicons name="ios-create-outline" color={color} size={26} />
+                        ),
+                    }}
+                />
+
+            </TabsNavigator.Navigator>
+        </NavigationContainer>
+    )
+}
+
+export default function TabNavigator() {
+    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {      //if user has signed in and reloads the app, the app will save the login and automatically navigates to home screen
+                setLoading(false)
+                    .catch((error) => {
+                        setLoading(false)  //loading is just a blank screen
+                    });
+            } else {
+                setUser()
+                setLoading(false)
+            }
+        });
+    }, []);
+
+    return (
+        <>
+            {!loading && user ? <MainTabs /> : <AuthTabs />}
+        </>
     )
 
 }
