@@ -132,11 +132,16 @@ export default function TabNavigator() {
             }
         });
     }, []);
-
-    return (
-        <NavigationContainer theme={MyTheme}>
-            {!loading && user ? <MainTabs /> : <AuthTabs />}
-        </NavigationContainer>
-    )
-
+    
+    if (loading) {
+        return (
+            <></>
+        )
+    } else {
+        return (
+            <NavigationContainer theme={MyTheme}>
+                {user ? <MainTabs /> : <AuthTabs />}
+            </NavigationContainer>
+        )
+    }
 }

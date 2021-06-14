@@ -33,6 +33,21 @@ export default function Main() {
     const [recipeData, setRecipeData] = useState([])
 
     // [{
+    //     cuisine: ["Local", "Vegetarian"],
+    //     difficulty: "easy",
+    //     id: "NGa21ieM5LIsEHe0V8uk",
+    //     image: image_source,
+    //     ingredients: "maggie\nmee\n",
+    //     method: "Step 1\n2. Step 2",
+    //     recipeName: "Maggie Mee",
+    //     saves: 0,
+    //     time: "1h"
+    // },
+    // {...},
+    // {...}]
+    const [bookmarkedRecipeData, setBookmarkedRecipeData] = useState([])
+
+    // [{
     //     Location: "Blk, 208B New Upper Changi Rd, 462208",
     //     id: "UGafNQZ88Fddddmx6nH5",
     //     rating: 5,
@@ -51,6 +66,26 @@ export default function Main() {
     // {...},
     // {...}]
     const [hawkerData, setHawkerData] = useState([])
+
+    // [{
+    //     Location: "Blk, 208B New Upper Changi Rd, 462208",
+    //     id: "UGafNQZ88Fddddmx6nH5",
+    //     rating: 5,
+    //     region: "East",
+    //     reviews: [{
+    //         "image": image_source,
+    //         "review": "Very tasty",
+    //     },
+    //     {
+    //         "image": image_source,
+    //         "review": "Very tasty",
+    //     }],
+    //     saves: 0,
+    //     stallName: "Prata Stall",
+    // },
+    // {...},
+    // {...}]
+    const [bookmarkedHawkerData, setBookmarkedHawkerData] = useState([])
 
     const logOut = async () => {
         try {
@@ -101,18 +136,36 @@ export default function Main() {
 
     useEffect(() => {
         const user = firebase.auth().currentUser
-        const unsubscribeUser = firebase.firestore().collection("userData").doc(user?.uid).onSnapshot(async (doc) => {
+        const unsubscribeUser = firebase.firestore().collection("userData").doc(user.uid).onSnapshot(async (doc) => {
             let data = doc.data()
             setUser(data)
-            let recipes = await Promise.all(data.recipePosts.map(async (id, index) => {
-                return await getRecipeData(id)
-            }))
-            setRecipeData(recipes)
+            if (data.recipePosts.length > 0) {
+                let recipes = await Promise.all(data.recipePosts.map(async (id, index) => {
+                    return await getRecipeData(id)
+                }))
+                setRecipeData(recipes)
+            }
 
-            let hawkers = await Promise.all(data.hawkerPosts.map(async (id, index) => {
-                return await getHawkerData(id)
-            }))
-            setHawkerData(hawkers)
+            if (data.bookmarkedRecipes.length > 0) {
+                let bookmarkedRecipes = await Promise.all(data.bookmarkedRecipes.map(async (id, index) => {
+                    return await getRecipeData(id)
+                }))
+                setBookmarkedRecipeData(bookmarkedRecipes)
+            }
+
+            if (data.hawkerPosts.length > 0) {
+                let hawkers = await Promise.all(data.hawkerPosts.map(async (id, index) => {
+                    return await getHawkerData(id)
+                }))
+                setHawkerData(hawkers)
+            }
+
+            if (data.bookmarkedHawkers.length > 0) {
+                let bookmarkedHawkers = await Promise.all(data.bookmarkedHawkers.map(async (id, index) => {
+                    return await getHawkerData(id)
+                }))
+                setBookmarkedHawkerData(bookmarkedHawkers)
+            }
         })
 
         return () => {
@@ -125,6 +178,8 @@ export default function Main() {
             <Text>Profile</Text>
             <Text>{JSON.stringify(recipeData)}</Text>
             <Text>{JSON.stringify(hawkerData)}</Text>
+            <Text>{JSON.stringify(bookmarkedHawkerData)}</Text>
+            <Text>{JSON.stringify(bookmarkedRecipeData)}</Text>
             <Text>{JSON.stringify(user)}</Text>
             <TouchableOpacity
                 style={{ alignItems: "center", justifyContent: 'center', backgroundColor: "red" }}
