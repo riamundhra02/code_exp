@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import  firebase  from 'firebase';
 import '@firebase/auth';
 import '@firebase/firestore';
 
@@ -11,11 +11,11 @@ var firebaseConfig = {
     storageBucket: "code-exp-e3eb3.appspot.com",
     messagingSenderId: "838192194774",
     appId: "1:838192194774:web:d50bc36f0a3c72cdd21577"
-  };
+};
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}else{
+if (!firebase.apps?.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
     firebase.app()
 }
 
