@@ -76,17 +76,18 @@ function MainTabs() {
     )
 }
 
+const AuthNavigator = createMaterialBottomTabNavigator();
 function AuthTabs() {
     return (
 
-        <TabsNavigator.Navigator
+        <AuthNavigator.Navigator
             backBehavior='none'
             inactiveColor='#4c74cc'
             activeColor='#154c79'
             shifting={true}
         >
 
-            <TabsNavigator.Screen
+            <AuthNavigator.Screen
                 name="Login"
                 component={Login}
                 options={{
@@ -98,7 +99,7 @@ function AuthTabs() {
                 }}
             />
 
-            <TabsNavigator.Screen
+            <AuthNavigator.Screen
                 name="Register"
                 component={Register}
                 options={{
@@ -110,7 +111,7 @@ function AuthTabs() {
                 }}
             />
 
-        </TabsNavigator.Navigator>
+        </AuthNavigator.Navigator>
 
     )
 }

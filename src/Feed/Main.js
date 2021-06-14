@@ -88,6 +88,8 @@ export default function Home() {
     return (
         <View style={globalStyles.container}>
             <Text>Explore</Text>
+            <Text>{JSON.stringify(recipeData)}</Text>
+            <Text>{JSON.stringify(hawkerData)}</Text>
         </View>
     )
 }

@@ -123,6 +123,9 @@ export default function Main() {
     return (
         <View style={globalStyles.container}>
             <Text>Profile</Text>
+            <Text>{JSON.stringify(recipeData)}</Text>
+            <Text>{JSON.stringify(hawkerData)}</Text>
+            <Text>{JSON.stringify(user)}</Text>
             <TouchableOpacity
                 style={{ alignItems: "center", justifyContent: 'center', backgroundColor: "red" }}
                 onPress={logOut}>
