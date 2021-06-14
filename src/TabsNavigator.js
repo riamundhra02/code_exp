@@ -123,11 +123,10 @@ export default function TabNavigator() {
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            if (user) {      //if user has signed in and reloads the app, the app will save the login and automatically navigates to home screen
+            if (user) {  
+                setUser(user)    //if user has signed in and reloads the app, the app will save the login and automatically navigates to home screen
                 setLoading(false)
-                    .catch((error) => {
-                        setLoading(false)  //loading is just a blank screen
-                    });
+
             } else {
                 setUser()
                 setLoading(false)
