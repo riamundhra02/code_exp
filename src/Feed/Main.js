@@ -52,8 +52,11 @@ export default function Home() {
                 let data = doc.data()
                 let img = await getImage(data.image)
                 data.image = img
+                data.ingredients=data.ingredients.replaceAll("\\n", "\n")
+                data.method=data.method.replaceAll("\\n", "\n")
                 return { ...data, id: doc.id }
             }));
+            console.log(results)
             setRecipeData(results)
         })
 
@@ -64,11 +67,14 @@ export default function Home() {
                     let copy = review
                     let img = await getImage(doc.id + "/" + review.image)
                     copy.image = img
+                    copy.review=copy.review.replaceAll("\\n", "\n")
                     return copy
                 }))
                 data.reviews = revieww
+                data.Location=data.Location.replaceAll("\\n", '\n')
                 return { ...data, id: doc.id }
             }));
+            console.log(results)
             setHawkerData(results)
         })
 
