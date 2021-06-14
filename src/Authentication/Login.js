@@ -18,9 +18,6 @@ export default function LoginScreen({ navigation }) {
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then((response) => {
-                navigation.navigate('Explore')  //navigates to homepage if successful
-            })
             .catch(error => {
                 alert(error)
             })
