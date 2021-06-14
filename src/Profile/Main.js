@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native'
 
-import { globalStyles } from './shared/globalStyles'
+import { globalStyles } from '../shared/globalStyles'
 
-export default function Home(){
+export default function Main(){
     return(
         <View style={globalStyles.container}>
-            <Text>Some changes jsahdjskahdjak more changes</Text>
+            <Text>Profile</Text>
         </View>
     )
 }

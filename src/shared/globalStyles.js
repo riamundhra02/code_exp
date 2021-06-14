@@ -3,20 +3,21 @@ import { StyleSheet } from 'react-native'
 export const colorTheme = { //populate this with common colour themes we are using
 
     backgroundWhite: 'white',
-    backgroundBeige: '#fff2cc',
-    backgroundGreen: '#d8ead2',
-    backgroundLightOrange: '#fce5cd',
-    backgroundLightBlue: '#c9daf8',
-    backgroundLightRed: '#f4cccc',
+    backgroundBlueOne: '#acbcec',
+    backgroundBlueTwo: '#8cbcdc',
+    backgroundBlueThree: '#abdbe3',
+    backgroundBlueFour: "#648cd4",
+    TextBlue: '#4c74cc',
+    TextBlack:"black"
 
 }
 
 export const tabsNavigatorStyle = {
 
     color: {
-        home: colorTheme.backgroundBeige,
-        tabOne: colorTheme.backgroundLightRed,
-        tabTwo: colorTheme.backgroundLightBlue,
+        feed: colorTheme.backgroundBlueOne,
+        createPost: colorTheme.backgroundBlueTwo,
+        profilePage: colorTheme.backgroundBlueThree,
     },
     font: {
         fontFamily: 'quicksand-regular'

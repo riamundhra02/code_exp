@@ -6,11 +6,11 @@ import { NavigationContainer, DefaultTheme, configurefonts } from '@react-naviga
 
 import { Ionicons } from '@expo/vector-icons';
 
-import Home from './Home'
-import TabOne from './TabOne'
-import TabTwo from './TabTwo'
+import CreatePost from './CreatePost/Main'
+import Feed from './Feed/Feed'
+import Profile from './Profile/Main'
 
-import { tabsNavigatorStyle } from './shared/globalStyles'
+import { tabsNavigatorStyle, colorTheme } from './shared/globalStyles'
 
 const TabsNavigator = createMaterialBottomTabNavigator();
 
@@ -27,40 +27,41 @@ export default function TabNavigator() {
         <NavigationContainer theme={MyTheme}>
             <TabsNavigator.Navigator
                 backBehavior='none'
-                inactiveColor='#A9A9A9'
-                activeColor='#383838'
+                inactiveColor='#4c74cc'
+                activeColor='#154c79'
                 shifting={true}
             >
 
                 <TabsNavigator.Screen
-                    name="Home"
-                    component={Home}
+                    name="Explore"
+                    component={Feed}
                     options={{
-                        tabBarLabel: 'Home',
-                        tabBarColor: tabsNavigatorStyle.color.home,
+                        tabBarLabel: 'Explore',
+                        tabBarColor: tabsNavigatorStyle.color.feed,
                         tabBarIcon: ({ color }) => (
                             <Ionicons name="ios-home" color={color} size={26} />
                         ),
                     }}
                 />
+
                 <TabsNavigator.Screen
-                    name="Tab One"
-                    component={TabOne}
+                    name="Create Post"
+                    component={CreatePost}
                     options={{
-                        tabBarLabel: 'Tab One',
-                        tabBarColor: tabsNavigatorStyle.color.tabOne,
+                        tabBarLabel: 'Create Post',
+                        tabBarColor: tabsNavigatorStyle.color.createPost,
                         tabBarIcon: ({ color }) => (
-                            <Ionicons name="people-circle-outline" color={color} size={26} />
+                            <Ionicons name="ios-create-outline" color={color} size={26} />
                         ),
                     }}
                 />
 
                 <TabsNavigator.Screen
-                    name="Tab Two"
-                    component={TabTwo}
+                    name="Profile"
+                    component={Profile}
                     options={{
-                        tabBarLabel: 'Tab Two',
-                        tabBarColor: tabsNavigatorStyle.color.tabTwo,
+                        tabBarLabel: 'Profile',
+                        tabBarColor: tabsNavigatorStyle.color.profilePage,
                         tabBarIcon: ({ color }) => (
                             <Ionicons name="ios-person" color={color} size={26} />
                         ),
