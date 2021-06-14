@@ -15,20 +15,11 @@ export default function Home() {
     //     saves: 0,
     //     time: "1h"
     // },
-    // {
-    //     cuisine: ["Local", "Vegetarian"],
-    //     difficulty: "easy",
-    //     id: "NGa21ieM5LIsEHe0V8uk",
-    //     image: image_source,
-    //     ingredients: "maggie\nmee\n",
-    //     method: "Step 1\n2. Step 2",
-    //     recipeName: "Maggie Mee",
-    //     saves: 0,
-    //     time: "1h"
-    // }]
+    // {...},
+    // {...}]
     const [recipeData, setRecipeData] = useState([])
 
-    
+
     // [{
     //     Location: "Blk, 208B New Upper Changi Rd, 462208",
     //     id: "UGafNQZ88Fddddmx6nH5",
@@ -45,22 +36,8 @@ export default function Home() {
     //     saves: 0,
     //     stallName: "Prata Stall",
     // },
-    // {
-    //     Location: "Blk, 208B New Upper Changi Rd, 462208",
-    //     id: "UGafNQZ88Fddddmx6nH5",
-    //     rating: 5,
-    //     region: "East",
-    //     reviews: [{
-    //         "image": image_source,
-    //         "review": "Very tasty",
-    //     },
-    //     {
-    //         "image": image_source,
-    //         "review": "Very tasty",
-    //     }],
-    //     saves: 0,
-    //     stallName: "Prata Stall",
-    // }]
+    // {...},
+    // {...}]
     const [hawkerData, setHawkerData] = useState([])
 
     const getImage = async (img) => {
