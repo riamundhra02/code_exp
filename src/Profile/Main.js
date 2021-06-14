@@ -50,7 +50,7 @@ export default function Main() {
     // },
     // {...},
     // {...}]
-    const [hawkerDate, setHawkerData] = useState([])
+    const [hawkerData, setHawkerData] = useState([])
 
     const logOut = async () => {
         try {
