@@ -102,6 +102,9 @@ export function Hawker(hawkerData) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
+        flex: 1,
+        width: Dimensions.get('window').width,
+        margin:20,
     },
 
     hawkerName: {

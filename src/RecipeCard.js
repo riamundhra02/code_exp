@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { firebase } from './shared/config'
 import { globalStyles } from './shared/globalStyles'
 
-export default function Recipe({ id }) {
+export function Recipe(recipeData) {
     // {
     //     cuisine: ["Local", "Vegetarian"],
     //     difficulty: "easy",
@@ -16,40 +16,40 @@ export default function Recipe({ id }) {
     //     time: "1h"
     // }
 
-    const [recipeData, setRecipeData] = useState(null)
-    const [loading, setLoading] = useState(true)
+    // const [recipeData, setRecipeData] = useState(null)
+    // const [loading, setLoading] = useState(true)
 
-    const getImage = async (img) => {
-        let imageRef = firebase.storage().ref(img);
-        return imageRef.getDownloadURL()
-    }
+    // const getImage = async (img) => {
+    //     let imageRef = firebase.storage().ref(img);
+    //     return imageRef.getDownloadURL()
+    // }
 
-    const getRecipeData = async (id) => {
-        setLoading(true)
-        let data
-        await firebase.firestore().collection("recipeData").doc(id).get()
-            .then(async (doc) => {
-                if (doc.exists) {
-                    data = doc.data()
-                    let img = await getImage(data.image)
-                    data.image = img
-                    data.ingredients = data.ingredients.replaceAll("\\n", "\n")
-                    data.method = data.method.replaceAll("\\n", "\n")
-                    setLoading(false)
-                }
-            })
-        return { ...data, id: id }
-    }
+    // const getRecipeData = async (id) => {
+    //     setLoading(true)
+    //     let data
+    //     await firebase.firestore().collection("recipeData").doc(id).get()
+    //         .then(async (doc) => {
+    //             if (doc.exists) {
+    //                 data = doc.data()
+    //                 let img = await getImage(data.image)
+    //                 data.image = img
+    //                 data.ingredients = data.ingredients.replaceAll("\\n", "\n")
+    //                 data.method = data.method.replaceAll("\\n", "\n")
+    //                 setLoading(false)
+    //             }
+    //         })
+    //     return { ...data, id: id }
+    // }
 
 
-    useEffect(() => {
-        getRecipeData(id)
-            .then(recipe => {
-                console.log(recipe)
-                setRecipeData(recipe)
-            })
+    // useEffect(() => {
+    //     getRecipeData(id)
+    //         .then(recipe => {
+    //             console.log(recipe)
+    //             setRecipeData(recipe)
+    //         })
 
-    }, [])
+    // }, [])
 
     return (
         //<View>
@@ -57,11 +57,11 @@ export default function Recipe({ id }) {
         //<Text>{JSON.stringify(recipeData)}</Text>
         //</View>
         <View style={styles.container}>
-            {recipeData==null ? null : (
+            {recipeData == null ? null : (
                 <>
                     <Image
                         style={styles.profilePic}
-                        source={{uri: recipeData.image}}
+                        source={{ uri: recipeData.image }}
                     />
                     <Text style={styles.recipeName}>{recipeData.recipeName}</Text>
 
@@ -84,6 +84,9 @@ export default function Recipe({ id }) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
+        flex: 1,
+        width: Dimensions.get('window').width,
+        margin:20,
     },
 
     recipeName: {

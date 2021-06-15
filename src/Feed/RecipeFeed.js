@@ -3,14 +3,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { FlatList, StyleSheet, Text, View, Image, Alert, Dimensions, TouchableOpacity, Button, SafeAreaView } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { Hawker } from "../HawkerCard"
+import { Recipe } from "../RecipeCard"
 import { firebase } from '../shared/config'
 import { globalStyles } from "../shared/globalStyles";
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
 
 export default function HawkerfeedScreen({ navigation }) {
     const swipeable = useRef()
-    const [hawkerData, setHawkerData] = useState(null)
+    const [recipeData, setRecipeData] = useState(null)
     const [loading, setLoading] = useState(true)
 
     const getImage = async (img) => {
@@ -20,30 +20,24 @@ export default function HawkerfeedScreen({ navigation }) {
 
 
     useEffect(() => {
-        const unsubscribeHawkers = firebase.firestore().collection("hawkerData").onSnapshot(async (collection) => {
+        const unsubscribeRecipes = firebase.firestore().collection("recipeData").onSnapshot(async (collection) => {
             setLoading(true)
             let results = await Promise.all(collection.docs.map(async (doc) => {
                 let data = doc.data()
-                let revieww = await Promise.all(doc.data().reviews.map(async (review, index) => {
-                    let copy = review
-                    let img = await getImage(doc.id + "/" + review.image)
-                    copy.image = img
-                    copy.review = copy.review.replaceAll("\\n", "\n")
-                    return copy
-                }))
-                data.reviews = revieww
-                data.Location = data.Location.replaceAll("\\n", '\n')
+                let img = await getImage(data.image)
+                data.image = img
+                data.ingredients = data.ingredients.replaceAll("\\n", "\n")
+                data.method = data.method.replaceAll("\\n", "\n")
                 return { ...data, id: doc.id }
             }));
-            console.log(results)
-            setHawkerData(results)
+            setRecipeData(results)
             setLoading(false)
+
         })
 
         return () => {
-            unsubscribeHawkers()
+            unsubscribeRecipes()
         };
-
     }, []);
 
 
@@ -64,26 +58,25 @@ export default function HawkerfeedScreen({ navigation }) {
                 renderLeftActions={() => leftswipe(item.id)}
                 onSwipeableLeftWillOpen={() => {
                     setTimeout(() => swipeable.current.close(), 150)
-                    const id=item.id
+                    const id = item.id
                     const user = firebase.auth().currentUser
                     firebase.firestore()
                         .collection("userData")
                         .doc(user.uid)
                         .update({
-                            bookmarkedHawkers: firebase.firestore.FieldValue.arrayUnion(
+                            bookmarkedRecipes: firebase.firestore.FieldValue.arrayUnion(
                                 id
                             ),
                         }).then(() => {
-                            firebase.firestore().collection("hawkerData").doc(id).update({ saves: firebase.firestore.FieldValue.arrayUnion(user.uid) })
+                            firebase.firestore().collection("recipeData").doc(id).update({ saves: firebase.firestore.FieldValue.arrayUnion(user.uid) })
                         });
                 }}
-                renderRightActions={() => Hawker(item)}
+                renderRightActions={() => Recipe(item)}
             >
                 <View style={styles.container}>
-                    <Image style={styles.image} source={{ uri: item.reviews[0].image }} />
+                    <Image style={styles.image} source={{ uri: item.image }} />
                     <View style={{ width: "100%", position: "absolute", bottom: 0, zIndex: 1000, display: "flex", flexDirection: "row", justifyContent: "space-around", margin: 50 }}>
-                        <Text style={globalStyles.secondaryTitleText}>{item.stallName}</Text>
-                        <Text style={globalStyles.otherText}>{item.region}</Text>
+                        <Text style={globalStyles.secondaryTitleText}>{item.recipeName}</Text>
                         <View style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
                             <Text style={globalStyles.otherText}>{item.saves.length}</Text>
                             <MaterialCommunityIcons name="bookmark-multiple" size={24} color="black" />
@@ -96,10 +89,10 @@ export default function HawkerfeedScreen({ navigation }) {
 
     return (
         <View style={globalStyles.container}>
-            {loading || hawkerData == null ? null : (
+            {loading || recipeData == null ? null : (
                 <>
                     <FlatList
-                        data={hawkerData}
+                        data={recipeData}
                         renderItem={renderItem}
                         snapToAlignment={'top'}
                         snapToInterval={Dimensions.get('screen').height}
