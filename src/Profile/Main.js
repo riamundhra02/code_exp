@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native'
+import { Flatlist, View, Text, Image, TouchableOpacity } from 'react-native'
 import { firebase } from '../shared/config'
 import { globalStyles } from '../shared/globalStyles'
+import { Title, Caption } from 'react-native-paper'
+import { MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
 
 export default function Main() {
 
@@ -86,7 +88,7 @@ export default function Main() {
     // {...},
     // {...}]
     const [bookmarkedHawkerData, setBookmarkedHawkerData] = useState([])
-
+    const [loading, setloading ] = useState(false) 
     const logOut = async () => {
         try {
             await firebase.auth().signOut();
@@ -138,6 +140,7 @@ export default function Main() {
         const user = firebase.auth().currentUser
         const unsubscribeUser = firebase.firestore().collection("userData").doc(user.uid).onSnapshot(async (doc) => {
             let data = doc.data()
+            setloading(true)
             setUser(data)
             if (data.recipePosts.length > 0) {
                 let recipes = await Promise.all(data.recipePosts.map(async (id, index) => {
@@ -166,8 +169,9 @@ export default function Main() {
                 }))
                 setBookmarkedHawkerData(bookmarkedHawkers)
             }
+            setloading(false)
         })
-
+        
         return () => {
             unsubscribeUser()
         };
@@ -175,18 +179,34 @@ export default function Main() {
 
     return (
         <View style={globalStyles.container}>
-            <Text>Profile</Text>
-            <Text>{JSON.stringify(recipeData)}</Text>
+            {loading ? null : (<View>
+            <Text style={globalStyles.profileName}> {user?.fullName} </Text> 
+            <Image style={globalStyles.profilePicture} source= {{uri: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg '}} />
+            {/* <Text>{JSON.stringify(recipeData)}</Text>
             <Text>{JSON.stringify(hawkerData)}</Text>
             <Text>{JSON.stringify(bookmarkedHawkerData)}</Text>
             <Text>{JSON.stringify(bookmarkedRecipeData)}</Text>
-            <Text>{JSON.stringify(user)}</Text>
-            <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: 'center', backgroundColor: "red" }}
-                onPress={logOut}>
+            <Text>{JSON.stringify(user)}</Text> */}
+             <View style={globalStyles.ProfileboxWrapper}>
+                <View style={globalStyles.Profilebox}> 
+                    <Title>{hawkerData.length}</Title>  
+                    <Caption><MaterialCommunityIcons name="chef-hat" size={24} color="black" /></Caption>
+                </View>
+                <View style={globalStyles.Profilebox}>
+                    <Title>{recipeData.length}</Title>
+                    <Caption><FontAwesome name="cutlery" size={24} color="black" /></Caption>
+                </View>
+            </View>
+            <TouchableOpacity style={globalStyles.logOut} onPress={logOut}>
                 <Text style={globalStyles.secondaryTitleText}>Log Out</Text>
             </TouchableOpacity>
-
+            </View>)}
+            {/* <Flatlist 
+                data={recipeData}
+                keyextractor={item => item.id.toString()}
+                renderItem={ ({item}) => renderItem(item)}
+            /> */}
         </View>
+            
     )
 }
