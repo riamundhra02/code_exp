@@ -34,6 +34,8 @@ function MainTabs() {
             inactiveColor='#4c74cc'
             activeColor='#154c79'
             shifting={true}
+            barStyle={{height: 80}}
+
         >
 
             <TabsNavigator.Screen
@@ -132,7 +134,7 @@ export default function TabNavigator() {
             }
         });
     }, []);
-    
+
     if (loading) {
         return (
             <></>

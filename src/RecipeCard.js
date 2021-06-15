@@ -16,7 +16,8 @@ export default function Recipe({ id }) {
     //     time: "1h"
     // }
 
-    const [recipeData, setRecipeData] = useState()
+    const [recipeData, setRecipeData] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const getImage = async (img) => {
         let imageRef = firebase.storage().ref(img);
@@ -24,6 +25,7 @@ export default function Recipe({ id }) {
     }
 
     const getRecipeData = async (id) => {
+        setLoading(true)
         let data
         await firebase.firestore().collection("recipeData").doc(id).get()
             .then(async (doc) => {
@@ -33,6 +35,7 @@ export default function Recipe({ id }) {
                     data.image = img
                     data.ingredients = data.ingredients.replaceAll("\\n", "\n")
                     data.method = data.method.replaceAll("\\n", "\n")
+                    setLoading(false)
                 }
             })
         return { ...data, id: id }
@@ -54,21 +57,25 @@ export default function Recipe({ id }) {
         //<Text>{JSON.stringify(recipeData)}</Text>
         //</View>
         <View style={styles.container}>
-            <Image
-                style={styles.profilePic}
-                source={recipeData.image}
-            />
-            <Text style={styles.recipeName}>{recipeData.recipeName}</Text>
+            {recipeData==null ? null : (
+                <>
+                    <Image
+                        style={styles.profilePic}
+                        source={{uri: recipeData.image}}
+                    />
+                    <Text style={styles.recipeName}>{recipeData.recipeName}</Text>
 
-            <Text style={styles.titleName}>{"Time Taken: " + recipeData.time}</Text>
-            <Text style={styles.titleName}>{"Difficulty Level: " + recipeData.difficulty}</Text>
+                    <Text style={styles.titleName}>{"Time Taken: " + recipeData.time}</Text>
+                    <Text style={styles.titleName}>{"Difficulty Level: " + recipeData.difficulty}</Text>
 
-            <Text style={styles.titleName}>Ingredients</Text>
-            <Text>{recipeData.ingredients}</Text>
+                    <Text style={styles.titleName}>Ingredients</Text>
+                    <Text>{recipeData.ingredients}</Text>
 
 
-            <Text style={styles.titleName}>Steps</Text>
-            <Text>{recipeData.method}</Text>
+                    <Text style={styles.titleName}>Steps</Text>
+                    <Text>{recipeData.method}</Text>
+                </>
+            )}
         </View>
     );
 }
@@ -99,7 +106,7 @@ const styles = StyleSheet.create({
 
     titleName: {
         paddingTop: 20,
-        alignSelf: 'left',
+        alignSelf: 'flex-start',
         fontSize: 25,
 
     },

@@ -88,7 +88,7 @@ export default function Main() {
     // {...},
     // {...}]
     const [bookmarkedHawkerData, setBookmarkedHawkerData] = useState([])
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(true)
     const [flatlistData, setFlatlistData] = useState([])
 
     const logOut = async () => {

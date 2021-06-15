@@ -1,9 +1,14 @@
 import React, { useState, useEffect, } from 'react';
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 import { View, Text, SafeAreaView } from 'react-native'
 import { firebase } from '../shared/config'
 import { globalStyles } from '../shared/globalStyles'
+import HawkerfeedScreen from "./HawkerFeed"
+import HawkerCard from "../HawkerCard"
 
-export default function Home() {
+export default function Home({ navigation }) {
+    const Stack = createStackNavigator();
     // [{
     //     cuisine: ["Local", "Vegetarian"],
     //     difficulty: "easy",
@@ -17,7 +22,8 @@ export default function Home() {
     // },
     // {...},
     // {...}]
-    const [recipeData, setRecipeData] = useState([])
+    const [recipeData, setRecipeData] = useState(null)
+    const [feed, setFeed] = useState("recipe")
 
 
     // [{
@@ -38,7 +44,8 @@ export default function Home() {
     // },
     // {...},
     // {...}]
-    const [hawkerData, setHawkerData] = useState([])
+    const [hawkerData, setHawkerData] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const getImage = async (img) => {
         let imageRef = firebase.storage().ref(img);
@@ -48,48 +55,33 @@ export default function Home() {
 
     useEffect(() => {
         const unsubscribeRecipes = firebase.firestore().collection("recipeData").onSnapshot(async (collection) => {
+            setLoading(true)
             let results = await Promise.all(collection.docs.map(async (doc) => {
                 let data = doc.data()
                 let img = await getImage(data.image)
                 data.image = img
-                data.ingredients=data.ingredients.replaceAll("\\n", "\n")
-                data.method=data.method.replaceAll("\\n", "\n")
+                data.ingredients = data.ingredients.replaceAll("\\n", "\n")
+                data.method = data.method.replaceAll("\\n", "\n")
                 return { ...data, id: doc.id }
             }));
-            console.log(results)
             setRecipeData(results)
-        })
+            setLoading(false)
 
-        const unsubscribeHawkers = firebase.firestore().collection("hawkerData").onSnapshot(async (collection) => {
-            let results = await Promise.all(collection.docs.map(async (doc) => {
-                let data = doc.data()
-                let revieww = await Promise.all(doc.data().reviews.map(async (review, index) => {
-                    let copy = review
-                    let img = await getImage(doc.id + "/" + review.image)
-                    copy.image = img
-                    copy.review=copy.review.replaceAll("\\n", "\n")
-                    return copy
-                }))
-                data.reviews = revieww
-                data.Location=data.Location.replaceAll("\\n", '\n')
-                return { ...data, id: doc.id }
-            }));
-            console.log(results)
-            setHawkerData(results)
         })
 
         return () => {
             unsubscribeRecipes()
-            unsubscribeHawkers()
         };
 
     }, []);
 
     return (
-        <SafeAreaView style={globalStyles.container}>
-            <Text>Explore</Text>
-            <Text>{JSON.stringify(recipeData)}</Text>
-            <Text>{JSON.stringify(hawkerData)}</Text>
-        </SafeAreaView>
+        <View style={globalStyles.container}>
+            <Text style={{ left: 130, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed==="recipe"? "blue":'white', fontWeight: feed==="recipe"? "bold":"normal" }} onPress={() => setFeed("recipe")}>Recipe</Text>
+            <Text style={{ left: 200, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed==="hawker"? "blue":'white', fontWeight: feed==="hawker"? "bold":"normal"}} onPress={() => setFeed("hawker")}>Hawker</Text>
+            <>
+                {feed==="recipe" ? <></> : <HawkerfeedScreen />}
+            </>
+        </View >
     )
 }
