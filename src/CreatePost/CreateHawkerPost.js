@@ -1,15 +1,191 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import { globalStyles } from "../shared/globalStyles";
-import { createStackNavigator } from "@react-navigation/stack";
+import { Rating } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
+import { firebase } from "../shared/config";
+import * as ImagePicker from "expo-image-picker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function CreateFood({ navigation }) {
-    return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>Create Food!</Text>
-        </View>
-    );
+  const [image, setImage] = useState("");
+  const [StallName, setStallName] = useState("");
+  const [Location, setLocation] = useState("");
+  const [Review, setReview] = useState("");
+  const [ratingCount, setRatingCount] = useState(0);
+  const [openCuisine, setOpenCuisine] = useState(false);
+  const [Cuisine, setCuisine] = useState([]);
+  const [itemsCuisine, setItemsCuisine] = useState([
+    { label: "Japanese", value: "Japanese" },
+    { label: "Italian", value: "Italian" },
+    { label: "Korean", value: "Korean" },
+    { label: "Chinese", value: "Chinese" },
+    { label: "Western", value: "Western" },
+    { label: "Vegetarian", value: "Vegetarian" },
+    { label: "Halal", value: "Halal" },
+    { label: "Others", value: "Others" },
+  ]);
+
+  const setData = () => {
+    let user = firebase.auth().currentUser;
+    var newRecipeRef = firebase.firestore().collection("hawkerData").doc();
+    var imageRef = firebase
+      .storage()
+      .ref(
+        newRecipeRef.id + "." + image.split(".")[image.split(".").length - 1]
+      );
+    imageRef
+      .put(Platform.OS === "ios" ? image.replace("file://", "") : image)
+      .then(() => {
+        newRecipeRef
+          .set({
+            stallName: StallName,
+            location: Location,
+            cuisine: Cuisine,
+            difficulty: Diff,
+            saves: 0,
+            time: Time,
+            image:
+              newRecipeRef.id +
+              "." +
+              image.split(".")[image.split(".").length - 1],
+          })
+          .then((recipeRef) => {
+            firebase
+              .firestore()
+              .collection("userData")
+              .doc(user.uid)
+              .update({
+                recipePosts: firebase.firestore.FieldValue.arrayUnion(
+                  newRecipeRef.id
+                ),
+              });
+          })
+          .then(() => {
+            console.log("hereeee");
+            setImage(null);
+            setStallName(null);
+            setLocation(null);
+            setReview(null);
+            setRatingCount(null);
+            setCuisine(null);
+            navigation.navigate("Back");
+            navigation.navigate("Explore");
+          });
+      });
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
+  return (
+    <View style={globalStyles.createPostView}>
+      <KeyboardAwareScrollView>
+        {image ? (
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200, marginBottom: 20 }}
+            />
+          </View>
+        ) : null}
+        <TouchableOpacity
+          style={{ ...globalStyles.button, marginBottom: 20, marginTop: 10 }}
+          onPress={pickImage}
+        >
+          <Text style={globalStyles.secondaryTitleText}>Pick an Image!</Text>
+        </TouchableOpacity>
+        <Text style={globalStyles.createPostText}>Stall Name</Text>
+        <TextInput
+          style={globalStyles.createPostInput}
+          onChangeText={(text) => setStallName(text)}
+          placeholder="Stall Name"
+        />
+        <Text style={globalStyles.createPostText}>Location</Text>
+        <TextInput
+          style={globalStyles.createPostInput}
+          onChangeText={(text) => setLocation(text)}
+          placeholder="Location"
+        />
+        <Text style={globalStyles.createPostText}>Cuisine</Text>
+        <DropDownPicker
+          mode="BADGE"
+          placeholder="Select the cuisine(s)"
+          containerProps={{
+            paddingRight: 20,
+            margin: 10,
+          }}
+          multiple={true}
+          min={0}
+          max={5}
+          open={openCuisine}
+          value={Cuisine}
+          items={itemsCuisine}
+          setOpen={setOpenCuisine}
+          setValue={setCuisine}
+          setItems={setItemsCuisine}
+          zIndex={1000}
+          zIndexInverse={3000}
+          maxHeight={250}
+          bottomOffset={100}
+        />
+        <Text style={globalStyles.createPostText}>Review</Text>
+        <TextInput
+          style={{
+            height: 230,
+            margin: 12,
+            borderWidth: 1,
+            borderRadius: 10,
+            paddingLeft: 10,
+          }}
+          onChangeText={(text) => setReview(text)}
+          placeholder="Review"
+          multiline
+          numberOfLines={4}
+        />
+        <Text style={globalStyles.createPostText}>Rating</Text>
+        <Rating
+          imageSize={40}
+          onFinishRating={(rating) => setRatingCount(rating)}
+        />
+        <Text></Text>
+        <TouchableOpacity
+          style={{ ...globalStyles.button, marginBottom: 20 }}
+          onPress={setData}
+        >
+          <Text style={globalStyles.secondaryTitleText}>Create Post!</Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+    </View>
+  );
 }

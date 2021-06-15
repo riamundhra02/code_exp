@@ -5,6 +5,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { globalStyles } from "../shared/globalStyles";
 import { createStackNavigator } from "@react-navigation/stack";
 import DropDownPicker from "react-native-dropdown-picker";
+import createFood from "./CreateHawkerPost";
+import createRecipe from "./CreateRecipePost";
 import CreateRecipe from "./CreateRecipePost";
 import CreateFood from "./CreateHawkerPost";
 
@@ -29,7 +31,6 @@ function Main({ navigation }) {
     </View>
   );
 }
-
 
 const Stack = createStackNavigator();
 
