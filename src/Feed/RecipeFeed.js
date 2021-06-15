@@ -24,8 +24,8 @@ export default function HawkerfeedScreen({ setHidden }) {
             setLoading(true)
             let results = await Promise.all(collection.docs.map(async (doc) => {
                 let data = doc.data()
-                let img = await getImage(data.image)
-                data.image = img
+                // let img = await getImage(data.image)
+                // data.image = img
                 data.ingredients = data.ingredients.replaceAll("\\n", "\n")
                 data.method = data.method.replaceAll("\\n", "\n")
                 return { ...data, id: doc.id }
@@ -77,7 +77,7 @@ export default function HawkerfeedScreen({ setHidden }) {
                 renderRightActions={() => Recipe(item)}
             >
                 <View style={styles.container}>
-                    <Image style={styles.image} source={{ uri: item.image }} />
+                    <Image style={styles.image} source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}} />
                     <View style={{ width: "100%", position: "absolute", bottom: 0, zIndex: 1000, display: "flex", flexDirection: "row", justifyContent: "space-around", margin: 50 }}>
                         <Text style={globalStyles.secondaryTitleText}>{item.recipeName}</Text>
                         <View style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
