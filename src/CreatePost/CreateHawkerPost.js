@@ -11,6 +11,14 @@ export default function CreateFood({ navigation }) {
   const [image, setImage] = useState("");
   const [StallName, setStallName] = useState("");
   const [Location, setLocation] = useState("");
+  const [openRegion, setOpenRegion]=useState(false)
+  const [region, setRegion] = useState("");
+  const [itemsRegion, setItemsRegion]=useState([
+    { label: "East", value: "East" },
+    { label: "West", value: "West" },
+    { label: "North", value: "North" },
+    { label: "South", value: "South" },
+  ])
   const [Review, setReview] = useState("");
   const [ratingCount, setRatingCount] = useState(0);
   const [openCuisine, setOpenCuisine] = useState(false);
@@ -28,47 +36,37 @@ export default function CreateFood({ navigation }) {
 
   const setData = () => {
     let user = firebase.auth().currentUser;
-    var newRecipeRef = firebase.firestore().collection("hawkerData").doc();
+    var newHawkerRef = firebase.firestore().collection("hawkerData").doc();
     var imageRef = firebase
       .storage()
       .ref(
-        newRecipeRef.id + "." + image.split(".")[image.split(".").length - 1]
+        newHawkerRef.id + "/0." + image.split(".")[image.split(".").length - 1]
       );
     imageRef
       .put(Platform.OS === "ios" ? image.replace("file://", "") : image)
       .then(() => {
-        newRecipeRef
+        newHawkerRef
           .set({
             stallName: StallName,
-            location: Location,
+            Location: Location,
+            region:region,
             cuisine: Cuisine,
-            difficulty: Diff,
+            rating: ratingCount + 1,
             saves: 0,
-            time: Time,
-            image:
-              newRecipeRef.id +
-              "." +
-              image.split(".")[image.split(".").length - 1],
+            reviews: [{image:"0."+ image.split(".")[image.split(".").length - 1], review: Review}],
           })
-          .then((recipeRef) => {
+          .then(() => {
             firebase
               .firestore()
               .collection("userData")
               .doc(user.uid)
               .update({
-                recipePosts: firebase.firestore.FieldValue.arrayUnion(
-                  newRecipeRef.id
+                hawkerPosts: firebase.firestore.FieldValue.arrayUnion(
+                  newHawkerRef.id
                 ),
               });
           })
           .then(() => {
-            console.log("hereeee");
-            setImage(null);
-            setStallName(null);
-            setLocation(null);
-            setReview(null);
-            setRatingCount(null);
-            setCuisine(null);
             navigation.navigate("Back");
             navigation.navigate("Explore");
           });
@@ -136,6 +134,26 @@ export default function CreateFood({ navigation }) {
           style={globalStyles.createPostInput}
           onChangeText={(text) => setLocation(text)}
           placeholder="Location"
+        />
+        <Text style={globalStyles.createPostText}>Region</Text>
+        <DropDownPicker
+          mode="BADGE"
+          placeholder="Select the region"
+          containerProps={{
+            paddingRight: 20,
+            margin: 10,
+          }}
+          multiple={false}
+          open={openRegion}
+          value={region}
+          items={itemsRegion}
+          setOpen={setOpenRegion}
+          setValue={setRegion}
+          setItems={setItemsRegion}
+          zIndex={1000}
+          zIndexInverse={3000}
+          maxHeight={250}
+          bottomOffset={100}
         />
         <Text style={globalStyles.createPostText}>Cuisine</Text>
         <DropDownPicker
