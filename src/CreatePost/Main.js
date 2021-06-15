@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, SafeAreaView } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { globalStyles } from "../shared/globalStyles";
@@ -12,7 +12,7 @@ import CreateFood from "./CreateHawkerPost";
 
 function Main({ navigation }) {
   return (
-    <View style={globalStyles.container}>
+    <SafeAreaView style={globalStyles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate("Create Recipe Post")}
       >
@@ -28,7 +28,7 @@ function Main({ navigation }) {
         <FontAwesome5 name="utensils" size={150} color="black" />
         <Text style={globalStyles.titleText}>Food</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

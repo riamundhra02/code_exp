@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native'
+import React, { useState, useEffect, } from 'react';
+import { View, Text, SafeAreaView } from 'react-native'
 import { firebase } from '../shared/config'
 import { globalStyles } from '../shared/globalStyles'
 
@@ -86,10 +86,10 @@ export default function Home() {
     }, []);
 
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaView style={globalStyles.container}>
             <Text>Explore</Text>
             <Text>{JSON.stringify(recipeData)}</Text>
             <Text>{JSON.stringify(hawkerData)}</Text>
-        </View>
+        </SafeAreaView>
     )
 }

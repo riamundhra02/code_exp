@@ -36,11 +36,26 @@ export default function CreateRecipe({ navigation }) {
         { label: "Others", value: "Others" },
     ]);
 
-    const setData = () => {
+    const setData = async () => {
         let user = firebase.auth().currentUser
         var newRecipeRef = firebase.firestore().collection("recipeData").doc()
         var imageRef = firebase.storage().ref(newRecipeRef.id + "." + image.split('.')[image.split('.').length - 1])
-        imageRef.put(Platform.OS === 'ios' ? image.replace('file://', '') : image)
+        // Why are we using XMLHttpRequest? See:
+        // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError("Network request failed"));
+            };
+            xhr.responseType = "blob";
+            xhr.open("GET", image, true);
+            xhr.send(null);
+        });
+        imageRef.put(blob)
             .then(() => {
                 newRecipeRef.set({
                     recipeName: RecipeName,

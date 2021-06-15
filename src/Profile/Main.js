@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Flatlist, View, Text, Image, TouchableOpacity } from 'react-native'
+import { FlatList, View, Text, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native'
 import { firebase } from '../shared/config'
 import { globalStyles } from '../shared/globalStyles'
 import { Title, Caption } from 'react-native-paper'
-import { MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
 
 export default function Main() {
 
@@ -88,7 +88,9 @@ export default function Main() {
     // {...},
     // {...}]
     const [bookmarkedHawkerData, setBookmarkedHawkerData] = useState([])
-    const [loading, setloading ] = useState(false) 
+    const [loading, setloading] = useState(false)
+    const [flatlistData, setFlatlistData] = useState([])
+
     const logOut = async () => {
         try {
             await firebase.auth().signOut();
@@ -99,7 +101,7 @@ export default function Main() {
 
     const getImage = async (img) => {
         let imageRef = firebase.storage().ref(img);
-        return imageRef.getDownloadURL()
+        return await imageRef.getDownloadURL()
     }
 
     const getRecipeData = async (id) => {
@@ -135,6 +137,13 @@ export default function Main() {
         return { ...data, id: id }
     }
 
+    function renderItem({ item }) {
+        console.log(item.image)
+        return (
+            <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: item.image }} />
+        )
+    }
+
 
     useEffect(() => {
         const user = firebase.auth().currentUser
@@ -161,6 +170,9 @@ export default function Main() {
                     return await getHawkerData(id)
                 }))
                 setHawkerData(hawkers)
+                setFlatlistData(hawkers.map((hawker, i) => {
+                    return ({ image: hawker.reviews[0].image, id: hawker.id })
+                }))
             }
 
             if (data.bookmarkedHawkers.length > 0) {
@@ -171,42 +183,65 @@ export default function Main() {
             }
             setloading(false)
         })
-        
+
         return () => {
             unsubscribeUser()
         };
     }, [])
 
     return (
-        <View style={globalStyles.container}>
-            {loading ? null : (<View>
-            <Text style={globalStyles.profileName}> {user?.fullName} </Text> 
-            <Image style={globalStyles.profilePicture} source= {{uri: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg '}} />
-            {/* <Text>{JSON.stringify(recipeData)}</Text>
-            <Text>{JSON.stringify(hawkerData)}</Text>
-            <Text>{JSON.stringify(bookmarkedHawkerData)}</Text>
-            <Text>{JSON.stringify(bookmarkedRecipeData)}</Text>
-            <Text>{JSON.stringify(user)}</Text> */}
-             <View style={globalStyles.ProfileboxWrapper}>
-                <View style={globalStyles.Profilebox}> 
-                    <Title>{hawkerData.length}</Title>  
-                    <Caption><MaterialCommunityIcons name="chef-hat" size={24} color="black" /></Caption>
-                </View>
-                <View style={globalStyles.Profilebox}>
-                    <Title>{recipeData.length}</Title>
-                    <Caption><FontAwesome name="cutlery" size={24} color="black" /></Caption>
-                </View>
-            </View>
-            <TouchableOpacity style={globalStyles.logOut} onPress={logOut}>
-                <Text style={globalStyles.secondaryTitleText}>Log Out</Text>
-            </TouchableOpacity>
-            </View>)}
-            {/* <Flatlist 
-                data={recipeData}
-                keyextractor={item => item.id.toString()}
-                renderItem={ ({item}) => renderItem(item)}
-            /> */}
-        </View>
-            
+        <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
+            {loading ? null : (
+                <View>
+                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", height: 100, margin: 10 }}>
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "75%" }}>
+                            <Image style={globalStyles.profilePicture} source={{ uri: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg ' }} />
+                            <Text style={globalStyles.profileName}> {user?.fullName} </Text>
+                        </View>
+                        <TouchableOpacity style={globalStyles.logOut} onPress={logOut}>
+                            <Text style={globalStyles.secondaryTitleText}>Log Out</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={globalStyles.ProfileboxWrapper}>
+                        <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
+                            setFlatlistData(hawkerData.map((hawker, i) => {
+                                return ({ image: hawker.reviews[0].image, id: hawker.id })
+                            }))
+                        }}>
+                            <Title>{hawkerData.length}</Title>
+                            <Caption><MaterialCommunityIcons name="chef-hat" size={24} color="black" /></Caption>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
+                            setFlatlistData(recipeData.map((recipe, i) => {
+                                return ({ image: recipe.image, id: recipe.id })
+                            }))
+                        }}>
+                            <Title>{recipeData.length}</Title>
+                            <Caption><FontAwesome name="cutlery" size={24} color="black" /></Caption>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
+                            let temp = bookmarkedRecipeData.map((recipe, i) => {
+                                return ({ image: recipe.image, id: recipe.id })
+                            })
+                            let tempTwo = bookmarkedHawkerData.map((hawker, i) => {
+                                return ({ image: hawker.reviews[0].image, id: hawker.id })
+                            })
+                            setFlatlistData([...temp, ...tempTwo])
+                        }}>
+                            <Title>{bookmarkedHawkerData.length + bookmarkedRecipeData.length}</Title>
+                            <Caption><MaterialCommunityIcons name="bookmark-multiple" size={24} color="black" /></Caption>
+                        </TouchableOpacity>
+                    </View>
+                    <FlatList
+                        columnWrapperStyle={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}
+                        data={flatlistData}
+                        keyextractor={item => item.id.toString()}
+                        renderItem={renderItem}
+                        numColumns={3}
+                        horizontal={false}
+                    />
+                </View>)}
+        </SafeAreaView>
+
     )
 }
