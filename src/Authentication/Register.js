@@ -28,7 +28,9 @@ export default function RegistrationScreen({ navigation }) {
                     fullName: fullName,
                     email: email,
                     hawkerPosts: [],
-                    recipePosts: []
+                    recipePosts: [],
+                    bookmarkedHawkers: [],
+                    bookmarkedRecipes: []
 
                 }
                 const usersRef = firebase.firestore().collection('userData')  // from db collection of userinfo
