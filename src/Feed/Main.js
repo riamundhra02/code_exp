@@ -10,13 +10,14 @@ import HawkerCard from "../HawkerCard"
 
 export default function Home({ navigation }) {
     const [feed, setFeed] = useState("recipe")
+    const [hidden, setHidden] = useState(false)
 
     return (
         <View style={globalStyles.container}>
-            <Text style={{ left: 130, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed === "recipe" ? "blue" : 'white', fontWeight: feed === "recipe" ? "bold" : "normal" }} onPress={() => setFeed("recipe")}>Recipe</Text>
-            <Text style={{ left: 200, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed === "hawker" ? "blue" : 'white', fontWeight: feed === "hawker" ? "bold" : "normal" }} onPress={() => setFeed("hawker")}>Hawker</Text>
+            {!hidden && <><Text style={{ left: 130, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed === "recipe" ? "blue" : 'white', fontWeight: feed === "recipe" ? "bold" : "normal" }} onPress={() => setFeed("recipe")}>Recipe</Text>
+                <Text style={{ left: 200, top: 50, zIndex: 100, backgroundColor: "transparent", fontSize: 20, position: "absolute", color: feed === "hawker" ? "blue" : 'white', fontWeight: feed === "hawker" ? "bold" : "normal" }} onPress={() => setFeed("hawker")}>Hawker</Text></>}
             <>
-                {feed === "recipe" ? <RecipefeedScreen /> : <HawkerfeedScreen />}
+                {feed === "recipe" ? <RecipefeedScreen setHidden={setHidden} /> : <HawkerfeedScreen setHidden={setHidden} />}
             </>
         </View >
     )

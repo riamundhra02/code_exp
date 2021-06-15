@@ -8,7 +8,7 @@ import { firebase } from '../shared/config'
 import { globalStyles } from "../shared/globalStyles";
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
 
-export default function HawkerfeedScreen({ navigation }) {
+export default function HawkerfeedScreen({ setHidden }) {
     const swipeable = useRef()
     const [recipeData, setRecipeData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -56,7 +56,10 @@ export default function HawkerfeedScreen({ navigation }) {
             <Swipeable
                 ref={swipeable}
                 renderLeftActions={() => leftswipe(item.id)}
+                onSwipeableRightWillOpen={()=>setHidden(true)}
+                onSwipeableClose={()=>setHidden(false)}
                 onSwipeableLeftWillOpen={() => {
+                    setHidden(false)
                     setTimeout(() => swipeable.current.close(), 150)
                     const id = item.id
                     const user = firebase.auth().currentUser
