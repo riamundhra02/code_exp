@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, Dimensions }
 import { firebase } from './shared/config'
 import { globalStyles } from './shared/globalStyles'
 import { Rating } from "react-native-elements";
+import { ScrollView } from 'react-native';
 
 export function Hawker(hawkerData) {
     // {
@@ -86,7 +87,7 @@ export function Hawker(hawkerData) {
         //<Text>Hawker Card</Text>
         //<Text>{JSON.stringify(hawkerData)}</Text>
         //</View>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {hawkerData == null ? null : (
                 <>
                     <Text style={styles.hawkerName}>{hawkerData.stallName}</Text>
@@ -154,7 +155,7 @@ export function Hawker(hawkerData) {
                 </>
             )}
 
-        </View>
+        </ScrollView>
     );
 }
 
