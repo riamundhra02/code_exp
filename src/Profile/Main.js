@@ -110,8 +110,8 @@ export default function Main() {
             .then(async (doc) => {
                 if (doc.exists) {
                     data = doc.data()
-                    let img = await getImage(data.image)
-                    data.image = img
+                    // let img = await getImage(data.image)
+                    // data.image = img
                     data.ingredients = data.ingredients.replaceAll("\\n", "\n")
                     data.method = data.method.replaceAll("\\n", "\n")
                 }
