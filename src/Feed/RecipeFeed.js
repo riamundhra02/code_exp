@@ -181,7 +181,7 @@ export default function HawkerfeedScreen({ setHidden }) {
                         data={recipeData}
                         renderItem={renderItem}
                         snapToAlignment={"top"}
-                        snapToInterval={Dimensions.get("screen").height}
+                        snapToInterval={Dimensions.get("screen").height-80}
                         pagingEnabled={true}
                         decelerationRate={"fast"}
                     />
