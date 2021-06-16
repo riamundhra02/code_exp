@@ -5,7 +5,13 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 
 export default function RecipeFilter(){
+    const [openTime, setOpenTime] = useState(false);
     const [Time, setTime] = useState("");
+    const [itemsTime, setItemsTime] = useState([
+        { label: "<1 hour", value: "<1 hour" },
+        { label: "1-2 hours", value: "1-2 hours" },
+        { label: ">2 hours", value: ">2 hours" }
+    ]);
     const [openDiff, setOpenDiff] = useState(false);
     const [Diff, setDiff] = useState("");
     const [itemsDiff, setItemsDiff] = useState([
@@ -72,10 +78,20 @@ export default function RecipeFilter(){
     return (
         <View style={globalStyles.createPostView}>
             <Text style={globalStyles.createPostText}>Time Required</Text>
-                <TextInput
-                    style={globalStyles.createPostInput}
-                    onChangeText={(text) => setTime(text)}
-                    placeholder="Time"
+                <DropDownPicker
+                    placeholder="Select a time duration"
+                    containerProps={{
+                        paddingRight: 20,
+                        margin: 10,
+                    }}
+                    open={openTime}
+                    value={Time}
+                    items={itemsTime}
+                    setOpen={setOpenTime}
+                    setValue={setTime}
+                    setItems={setItemsTime}
+                    zIndex={5000}
+                    zIndexInverse={1000}
                 />
                 <Text style={globalStyles.createPostText}>Difficulty Level</Text>
                 <DropDownPicker
