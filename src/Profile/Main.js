@@ -126,8 +126,8 @@ export default function Main() {
                 data = doc.data()
                 let revieww = await Promise.all(doc.data().reviews.map(async (review, index) => {
                     let copy = review
-                    let img = await getImage(doc.id + "/" + review.image)
-                    copy.image = img
+                    // let img = await getImage(doc.id + "/" + review.image)
+                    // copy.image = img
                     copy.review = copy.review.replaceAll("\\n", "\n")
                     return copy
                 }))
