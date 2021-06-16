@@ -37,7 +37,7 @@ export function Hawker(hawkerData) {
 
                     elevation: 6,
                 }}>
-                    <Image style={{ height: Dimensions.get('window').width / 3 - 10, width: Dimensions.get('window').width / 3 - 10 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                    <Image style={{ height: Dimensions.get('window').width / 3 - 10, width: Dimensions.get('window').width / 3 - 10 }} source={{ uri: item.image }} />
                     <Text style={styles.reviewStyle}>{item.review}</Text>
                 </View>
             </>
