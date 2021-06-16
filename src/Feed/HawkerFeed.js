@@ -141,6 +141,7 @@ export default function HawkerfeedScreen({ setHidden }) {
                                 {item.cuisine.map((cuis, index) => {
                                     return (
                                         <TouchableOpacity
+                                        key={index}
                                             style={{
                                                 backgroundColor: "lightgrey",
                                                 paddingHorizontal: 10,

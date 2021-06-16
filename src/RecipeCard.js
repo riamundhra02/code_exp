@@ -78,6 +78,7 @@ export function Recipe(recipeData) {
                     {recipeData.cuisine.map((cuis, index) => {
                         return (
                             <TouchableOpacity
+                            key={index}
                                 style={{
                                     backgroundColor: "lightgrey",
                                     paddingHorizontal: 10,
