@@ -51,6 +51,7 @@ export const globalStyles = StyleSheet.create({
     left: 0,
     fontSize: 18,
     fontFamily: "quicksand-bold",
+    marginTop:20
   },
   input: {
     height: 60,
