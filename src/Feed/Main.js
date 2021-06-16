@@ -14,6 +14,7 @@ import HawkerfeedScreen from "./HawkerFeed";
 import RecipefeedScreen from "./RecipeFeed";
 import HawkerCard from "../HawkerCard";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
+import HawkerFilter from "./HawkerFilter";
 
 export default function Home({ navigation }) {
   const [feed, setFeed] = useState("recipe");
@@ -59,7 +60,7 @@ export default function Home({ navigation }) {
               />
             </TouchableOpacity>
             <View style={globalStyles.container}>
-              <Text>filters here</Text>
+              <HawkerFilter></HawkerFilter>
             </View>
           </Modal>
           <Text
