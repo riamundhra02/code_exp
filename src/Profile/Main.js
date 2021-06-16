@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, Text, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native'
+import { FlatList, View, Text, Image, TouchableOpacity, Dimensions, SafeAreaView, Modal } from 'react-native'
 import { firebase } from '../shared/config'
 import { globalStyles } from '../shared/globalStyles'
 import { Title, Caption } from 'react-native-paper'
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
+import { Hawker } from '../HawkerCard'
+import { Recipe } from '../RecipeCard'
 
 export default function Main() {
 
@@ -90,6 +92,10 @@ export default function Main() {
     const [bookmarkedHawkerData, setBookmarkedHawkerData] = useState([])
     const [loading, setloading] = useState(true)
     const [flatlistData, setFlatlistData] = useState([])
+    const [hawker, setHawker] = useState(null)
+    const [modal, setModalVisible] = useState(false)
+    const [modalRecipe, setModalRecipeVisible] = useState(false)
+    const [recipe, setRecipe] = useState(null)
 
     const logOut = async () => {
         try {
@@ -138,10 +144,27 @@ export default function Main() {
     }
 
     function renderItem({ item }) {
-        console.log(item.image)
-        return (
-            <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}} />
-        )
+        if (item.hawker) {
+            return (
+                <TouchableOpacity onPress={async () => {
+                    let hawker = await getHawkerData(item.id)
+                    setHawker(hawker)
+                    setModalVisible(true)
+                }}>
+                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                </TouchableOpacity>
+            )
+        } else {
+            return (
+                <TouchableOpacity onPress={async () => {
+                    let hawker = await getRecipeData(item.id)
+                    setRecipe(hawker)
+                    setModalRecipeVisible(true)
+                }}>
+                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                </TouchableOpacity>
+            )
+        }
     }
 
 
@@ -171,7 +194,7 @@ export default function Main() {
                 }))
                 setHawkerData(hawkers)
                 setFlatlistData(hawkers.map((hawker, i) => {
-                    return ({ image: hawker.reviews[0].image, id: hawker.id })
+                    return ({ image: hawker.reviews[0].image, id: hawker.id, hawker: true })
                 }))
             }
 
@@ -205,7 +228,7 @@ export default function Main() {
                     <View style={globalStyles.ProfileboxWrapper}>
                         <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
                             setFlatlistData(hawkerData.map((hawker, i) => {
-                                return ({ image: hawker.reviews[0].image, id: hawker.id })
+                                return ({ image: hawker.reviews[0].image, id: hawker.id, hawker: true })
                             }))
                         }}>
                             <Title>{hawkerData.length}</Title>
@@ -213,7 +236,7 @@ export default function Main() {
                         </TouchableOpacity>
                         <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
                             setFlatlistData(recipeData.map((recipe, i) => {
-                                return ({ image: recipe.image, id: recipe.id })
+                                return ({ image: recipe.image, id: recipe.id, hawker: false })
                             }))
                         }}>
                             <Title>{recipeData.length}</Title>
@@ -221,10 +244,10 @@ export default function Main() {
                         </TouchableOpacity>
                         <TouchableOpacity style={globalStyles.Profilebox} onPress={() => {
                             let temp = bookmarkedRecipeData.map((recipe, i) => {
-                                return ({ image: recipe.image, id: recipe.id })
+                                return ({ image: recipe.image, id: recipe.id, hawker: false })
                             })
                             let tempTwo = bookmarkedHawkerData.map((hawker, i) => {
-                                return ({ image: hawker.reviews[0].image, id: hawker.id })
+                                return ({ image: hawker.reviews[0].image, id: hawker.id, hawker: true })
                             })
                             setFlatlistData([...temp, ...tempTwo])
                         }}>
@@ -232,6 +255,38 @@ export default function Main() {
                             <Caption><MaterialCommunityIcons name="bookmark-multiple" size={24} color="black" /></Caption>
                         </TouchableOpacity>
                     </View>
+                    <Modal
+                        animationType="slide"
+                        visible={modal}
+                        onRequestClose={() => {
+                            setModalVisible(false)
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{ marginTop: 40, marginLeft: 30 }}
+                            onPress={() => {
+                                setModalVisible(false)
+                            }}>
+                            <MaterialCommunityIcons name="close-circle" size={32} color="black" />
+                        </TouchableOpacity>
+                        {Hawker(hawker)}
+                    </Modal>
+                    <Modal
+                        animationType="slide"
+                        visible={modalRecipe}
+                        onRequestClose={() => {
+                            setModalRecipeVisible(false)
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{ marginTop: 40, marginLeft: 30 }}
+                            onPress={() => {
+                                setModalRecipeVisible(false)
+                            }}>
+                            <MaterialCommunityIcons name="close-circle" size={32} color="black" />
+                        </TouchableOpacity>
+                        {Recipe(recipe)}
+                    </Modal>
                     <FlatList
                         columnWrapperStyle={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}
                         data={flatlistData}
