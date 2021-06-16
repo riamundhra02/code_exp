@@ -38,8 +38,8 @@ export default function HawkerfeedScreen({ setHidden }) {
                 let results = await Promise.all(
                     collection.docs.map(async (doc) => {
                         let data = doc.data();
-                        // let img = await getImage(data.image)
-                        // data.image = img
+                        let img = await getImage(data.image)
+                        data.image = img
                         data.ingredients = data.ingredients.replaceAll("\\n", "\n");
                         data.method = data.method.replaceAll("\\n", "\n");
                         return { ...data, id: doc.id };
@@ -107,7 +107,7 @@ export default function HawkerfeedScreen({ setHidden }) {
                     <Image
                         style={styles.image}
                         source={{
-                            uri: "https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg",
+                            uri: item.image,
                         }}
                     />
                     <View

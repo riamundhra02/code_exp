@@ -116,8 +116,8 @@ export default function Main() {
             .then(async (doc) => {
                 if (doc.exists) {
                     data = doc.data()
-                    // let img = await getImage(data.image)
-                    // data.image = img
+                    let img = await getImage(data.image)
+                    data.image = img
                     data.ingredients = data.ingredients.replaceAll("\\n", "\n")
                     data.method = data.method.replaceAll("\\n", "\n")
                 }
@@ -132,8 +132,8 @@ export default function Main() {
                 data = doc.data()
                 let revieww = await Promise.all(doc.data().reviews.map(async (review, index) => {
                     let copy = review
-                    // let img = await getImage(doc.id + "/" + review.image)
-                    // copy.image = img
+                    let img = await getImage(doc.id + "/" + review.image)
+                    copy.image = img
                     copy.review = copy.review.replaceAll("\\n", "\n")
                     return copy
                 }))
@@ -151,7 +151,7 @@ export default function Main() {
                     setHawker(hawker)
                     setModalVisible(true)
                 }}>
-                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: item.image }} />
                 </TouchableOpacity>
             )
         } else {
@@ -161,7 +161,7 @@ export default function Main() {
                     setRecipe(hawker)
                     setModalRecipeVisible(true)
                 }}>
-                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                    <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: item.image }} />
                 </TouchableOpacity>
             )
         }
