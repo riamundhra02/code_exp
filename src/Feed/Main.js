@@ -15,6 +15,7 @@ import RecipefeedScreen from "./RecipeFeed";
 import HawkerCard from "../HawkerCard";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import HawkerFilter from "./HawkerFilter";
+import RecipeFilter from "./RecipeFilter";
 
 export default function Home({ navigation }) {
   const [feed, setFeed] = useState("recipe");
@@ -60,7 +61,11 @@ export default function Home({ navigation }) {
               />
             </TouchableOpacity>
             <View style={globalStyles.container}>
-              <HawkerFilter></HawkerFilter>
+            {feed === "recipe" ? (
+             <RecipeFilter setHidden={setHidden} />
+                ) : (
+              <HawkerFilter setHidden={setHidden} />
+                )}
             </View>
           </Modal>
           <Text

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import React, { useState, } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { globalStyles } from "../shared/globalStyles";
 import { Rating } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
