@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ScrollView } from 'react-native';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { firebase } from './shared/config'
 import { globalStyles } from './shared/globalStyles'
@@ -56,27 +57,112 @@ export function Recipe(recipeData) {
         //<Text>Recipe Card</Text>
         //<Text>{JSON.stringify(recipeData)}</Text>
         //</View>
-        <View style={styles.container}>
+        <ScrollView style={{ ...styles.container }}>
             {recipeData == null ? null : (
                 <>
-                    <Image
-                        style={styles.profilePic}
-                        source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}}
-                    />
-                    <Text style={styles.recipeName}>{recipeData.recipeName}</Text>
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginBottom:20
+                        }}>
+                        <Image
+                            style={{ ...styles.profilePic, width: 60, height: 60 , marginTop:0, marginBottom:0, marginRight:40}}
+                            source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }}
+                        />
+                        <Text style={styles.recipeName}>{recipeData.recipeName}</Text>
+                    </View>
+                    <Text style={globalStyles.otherText}>Cuisine:</Text>
+                    {recipeData.cuisine.map((cuis, index) => {
+                        return (
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: "lightgrey",
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5,
+                                    borderRadius: 10,
+                                    justifyContent: "center",
+                                    alignSelf: "flex-start",
+                                    opacity: 0.8,
+                                    marginRight: 10,
+                                    marginTop: 5,
+                                }}
+                            >
+                                <Text style={globalStyles.feedSubtitleText}>{cuis}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                    <Text style={globalStyles.otherText}>Time Taken:</Text>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "lightgrey",
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={globalStyles.feedSubtitleText}>{recipeData.time}</Text>
+                    </TouchableOpacity>
+                    <Text style={globalStyles.otherText}>Difficulty Level:</Text>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: recipeData.difficulty === "Easy" ? "lightgreen" : recipeData.difficulty === "Medium" ? "lemonchiffon" : "lightcoral",
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={{ ...globalStyles.feedSubtitleText, }}>{recipeData.difficulty}</Text>
+                    </TouchableOpacity>
 
-                    <Text style={styles.titleName}>{"Time Taken: " + recipeData.time}</Text>
-                    <Text style={styles.titleName}>{"Difficulty Level: " + recipeData.difficulty}</Text>
+                    <Text style={globalStyles.otherText}>Ingredients:</Text>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "lightgrey",
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={globalStyles.feedSubtitleText}>{recipeData.ingredients}</Text>
+                    </TouchableOpacity>
 
-                    <Text style={styles.titleName}>Ingredients</Text>
-                    <Text>{recipeData.ingredients}</Text>
-
-
-                    <Text style={styles.titleName}>Steps</Text>
-                    <Text>{recipeData.method}</Text>
+                    <Text style={globalStyles.otherText}>Method:</Text>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "lightgrey",
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={globalStyles.feedSubtitleText}>{recipeData.method}</Text>
+                    </TouchableOpacity>
                 </>
             )}
-        </View>
+        </ScrollView>
     );
 }
 
@@ -86,14 +172,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flex: 1,
         width: Dimensions.get('window').width,
-        margin:20,
+        margin: 20,
+        marginTop: 50
     },
 
     recipeName: {
         fontWeight: 'bold',
         alignSelf: 'center',
         fontSize: 35,
-        textDecorationLine: 'underline',
+        borderStyle: "solid",
+        borderColor: "black"
 
     },
 

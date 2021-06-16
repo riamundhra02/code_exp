@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, Dimensions } from 'react-native'
 import { firebase } from './shared/config'
 import { globalStyles } from './shared/globalStyles'
+import { Rating } from "react-native-elements";
+import { ScrollView } from 'react-native';
 
 export function Hawker(hawkerData) {
     // {
@@ -23,10 +25,23 @@ export function Hawker(hawkerData) {
 
     const renderReview = ({ item }) => {
         return (
-            <View style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }}>
-                <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: item.image }} />
-                <Text style={styles.reviewStyle}>{item.review}</Text>
-            </View>
+            <>
+                <View style={{
+                    height: Dimensions.get('window').width / 3 - 10, width: Dimensions.get('window').width / 3 - 10, borderRadius: 10, shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 3,
+                    },
+                    shadowOpacity: 0.27,
+                    shadowRadius: 4.65,
+
+                    elevation: 6,
+                }}>
+                    <Image style={{ height: Dimensions.get('window').width / 3 - 10, width: Dimensions.get('window').width / 3 - 10 }} source={{ uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg' }} />
+                    <Text style={styles.reviewStyle}>{item.review}</Text>
+                </View>
+            </>
+
         )
     };
     // const [hawkerData, setHawkerData] = useState(null)
@@ -72,18 +87,63 @@ export function Hawker(hawkerData) {
         //<Text>Hawker Card</Text>
         //<Text>{JSON.stringify(hawkerData)}</Text>
         //</View>
-        <View style={styles.container}>
-            {hawkerData==null ? null : (
+        <ScrollView style={styles.container}>
+            {hawkerData == null ? null : (
                 <>
-                    <Image
-                        style={styles.profilePic}
-                        source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}}
-                    />
                     <Text style={styles.hawkerName}>{hawkerData.stallName}</Text>
-                    <Text style={styles.titleName}>{"Cuisine: " + hawkerData.cuisine}</Text>
-                    <Text style={styles.titleName}>{"Location: " + hawkerData.Location}</Text>
+                    <Text style={globalStyles.otherText}>Cuisine:</Text>
+                    {hawkerData.cuisine.map((cuis, index) => {
+                        return (
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: "lightgrey",
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5,
+                                    borderRadius: 10,
+                                    justifyContent: "center",
+                                    alignSelf: "flex-start",
+                                    opacity: 0.8,
+                                    marginRight: 10,
+                                    marginTop: 5,
+                                }}
+                            >
+                                <Text style={globalStyles.feedSubtitleText}>{cuis}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                    <Text style={globalStyles.otherText}>Location:</Text>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "lightgrey",
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={globalStyles.feedSubtitleText}>{hawkerData.Location}</Text>
+                    </TouchableOpacity>
+                    <Text style={globalStyles.otherText}>Rating:</Text>
+                    <TouchableOpacity
+                        style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 10,
+                            justifyContent: "center",
+                            alignSelf: "flex-start",
+                            opacity: 0.8,
+                            marginRight: 10,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Rating imageSize={32} readonly startingValue={hawkerData.rating-1} />
+                    </TouchableOpacity>
 
-                    <Text style={styles.titleName}>Reviews</Text>
+                    <Text style={globalStyles.otherText}>Reviews</Text>
                     <FlatList
                         data={hawkerData.reviews}
                         renderItem={renderReview}
@@ -95,7 +155,7 @@ export function Hawker(hawkerData) {
                 </>
             )}
 
-        </View>
+        </ScrollView>
     );
 }
 
@@ -104,14 +164,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flex: 1,
         width: Dimensions.get('window').width,
-        margin:20,
+        margin: 20,
+        marginTop: 50
     },
 
     hawkerName: {
         fontWeight: 'bold',
         alignSelf: 'center',
         fontSize: 35,
-        textDecorationLine: 'underline',
+        marginBottom: 20,
+        borderStyle: "solid",
+        borderColor: "black"
 
     },
 

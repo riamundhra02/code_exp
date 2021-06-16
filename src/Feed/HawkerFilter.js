@@ -11,6 +11,7 @@ export default function HawkerFilter() {
   const [itemsRegion, setItemsRegion] = useState([
     { label: "East", value: "East" },
     { label: "West", value: "West" },
+    { label: "Central", value: "Central" },
     { label: "North", value: "North" },
     { label: "South", value: "South" },
   ]);
