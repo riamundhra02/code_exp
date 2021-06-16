@@ -77,7 +77,7 @@ export function Hawker(hawkerData) {
                 <>
                     <Image
                         style={styles.profilePic}
-                        source={hawkerData.reviews[0].image}
+                        source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}}
                     />
                     <Text style={styles.hawkerName}>{hawkerData.stallName}</Text>
                     <Text style={styles.titleName}>{"Cuisine: " + hawkerData.cuisine}</Text>

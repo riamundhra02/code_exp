@@ -140,7 +140,7 @@ export default function Main() {
     function renderItem({ item }) {
         console.log(item.image)
         return (
-            <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{ uri: item.image }} />
+            <Image style={{ height: Dimensions.get('window').width / 3, width: Dimensions.get('window').width / 3 }} source={{uri: 'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg'}} />
         )
     }
 
